@@ -1,6 +1,5 @@
 /*
 // https://www.midimonitor.com/
-
 usage:
 
 import Arturia from "./useArturia";
@@ -9,15 +8,13 @@ const { usePadPress, useKnobTurn } = Arturia("Arturia BeatStep");
 // happyPress(padNr, padDownCallback, padUpCallback );
 const happyPress = usePadPress(1);
 const sadPress = usePadPress(2);
-
 const [test, setText] = useState("init");
 usePadPress(9, _ => setText("down"), _ => setText("up"));
 
-
 // useKnobTurn(knobNr, initValue, stepSize);
-const knobA = useKnobTurn(1, 13, 0.1);
-const knobB = useKnobTurn(2, 13, 0.1);
-
+// * optional
+const knobA = useKnobTurn(1, 13, 0.1, cb*);
+const knobB = useKnobTurn(2, 13, 0.1, cb*);
 */
 
 import { useState, useEffect, useRef } from "react";
@@ -219,15 +216,22 @@ const Arturia = nameOfInput => {
     return padPressed;
   };
 
-  const useKnobTurn = (targetKnob, init, step) => {
+  const useKnobTurn = (targetKnob, init, step, cb) => {
     // State for keeping track of the knob
     const [knobValue, setKnobValue] = useState(init || 100);
 
-    const changeHandler = e => {
+    const changeHandler = (e) => {
       // console.log("Received 'controlchange' message.", e);
 
       if (knobMap[`${e.controller.number}`] === targetKnob) {
-        setKnobValue(knobValue =>
+        if (cb) {
+          if (e.value > 64) {
+            cb(step || 1);
+          } else {
+            cb(0 - (step || 1));
+          }
+        }
+        setKnobValue((knobValue) =>
           e.value > 64 ? knobValue + (step || 1) : knobValue - (step || 1)
         );
       }
