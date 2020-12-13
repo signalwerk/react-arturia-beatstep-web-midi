@@ -25,43 +25,43 @@ let boot = false;
 let afterBoot = [];
 
 const padMap = {
-  "36": 9,
-  "37": 10,
-  "38": 11,
-  "39": 12,
-  "40": 13,
-  "41": 14,
-  "42": 15,
-  "43": 16,
+  36: 9,
+  37: 10,
+  38: 11,
+  39: 12,
+  40: 13,
+  41: 14,
+  42: 15,
+  43: 16,
 
-  "44": 1,
-  "45": 2,
-  "46": 3,
-  "47": 4,
-  "48": 5,
-  "49": 6,
-  "50": 7,
-  "51": 8
+  44: 1,
+  45: 2,
+  46: 3,
+  47: 4,
+  48: 5,
+  49: 6,
+  50: 7,
+  51: 8,
 };
 
 const knobMap = {
-  "10": 1,
-  "74": 2,
-  "71": 3,
-  "76": 4,
-  "77": 5,
-  "93": 6,
-  "73": 7,
-  "75": 8,
+  10: 1,
+  74: 2,
+  71: 3,
+  76: 4,
+  77: 5,
+  93: 6,
+  73: 7,
+  75: 8,
 
-  "114": 9,
-  "18": 10,
-  "19": 11,
-  "16": 12,
-  "17": 13,
-  "91": 14,
-  "79": 15,
-  "72": 16
+  114: 9,
+  18: 10,
+  19: 11,
+  16: 12,
+  17: 13,
+  91: 14,
+  79: 15,
+  72: 16,
 };
 
 // Enable WebMidi.js
@@ -144,7 +144,7 @@ const knobMap = {
 //   // input.removeListener();
 // });
 
-const Arturia = nameOfInput => {
+const Arturia = (nameOfInput) => {
   const usePadPress = (targetPad, cbDown, cbUp) => {
     // State for keeping track of whether pad is pressed
     const [padPressed, setPadPressed] = useState(false);
@@ -163,7 +163,7 @@ const Arturia = nameOfInput => {
     }
 
     // If released pad set to false
-    const upHandler = e => {
+    const upHandler = (e) => {
       // console.log("Received 'noteoff' message", e);
 
       if (padMap[`${e.note.number}`] === targetPad) {
@@ -181,7 +181,7 @@ const Arturia = nameOfInput => {
         input.addListener("noteon", "all", downHandler);
         input.addListener("noteoff", "all", upHandler);
       } else {
-        afterBoot.push(e => {
+        afterBoot.push((e) => {
           input.addListener("noteon", "all", downHandler);
           input.addListener("noteoff", "all", upHandler);
         });
@@ -189,7 +189,7 @@ const Arturia = nameOfInput => {
         if (boot === false) {
           boot = true;
 
-          WebMidi.enable(err => {
+          WebMidi.enable((err) => {
             if (err) {
               console.log("WebMidi could not be enabled.", err);
             }
@@ -201,7 +201,7 @@ const Arturia = nameOfInput => {
               return;
             }
 
-            afterBoot.map(item => item());
+            afterBoot.map((item) => item());
             afterBoot = [];
           });
         }
@@ -242,14 +242,14 @@ const Arturia = nameOfInput => {
       if (input) {
         input.addListener("controlchange", "all", changeHandler);
       } else {
-        afterBoot.push(e => {
+        afterBoot.push((e) => {
           input.addListener("controlchange", "all", changeHandler);
         });
 
         if (boot === false) {
           boot = true;
 
-          WebMidi.enable(err => {
+          WebMidi.enable((err) => {
             if (err) {
               console.log("WebMidi could not be enabled.", err);
             }
@@ -261,7 +261,7 @@ const Arturia = nameOfInput => {
               return;
             }
 
-            afterBoot.map(item => item());
+            afterBoot.map((item) => item());
             afterBoot = [];
           });
         }
@@ -277,7 +277,7 @@ const Arturia = nameOfInput => {
 
   return {
     usePadPress,
-    useKnobTurn
+    useKnobTurn,
   };
 };
 
